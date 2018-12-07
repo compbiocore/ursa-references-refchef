@@ -103,3 +103,24 @@ wbps8:
       - salmon index -t caenorhabditis_elegans.PRJNA13758.WBPS8.mRNA_transcripts.salmon2.fa
         -i salmon_index_test/c_elegans_PRJNA13758_WBPS8_mRNA_transcripts_index  --type
         quasi -k 25
+drosophila-melanogaster_bdgp6rel9:
+  metadata:
+    name: drosophila-melanogaster_bdgp6rel9
+    species: drosophila
+    organization: ensembl
+    downloader: fgelin
+  levels:
+    references:
+    - component: primary
+      retrieve: true
+      commands:
+      - wget ftp://ftp.ensembl.org/pub/release-91/fasta/drosophila_melanogaster/dna/Drosophila_melanogaster.BDGP6.dna.toplevel.fa.gz
+      - wget ftp://ftp.ensembl.org/pub/release-91/fasta/drosophila_melanogaster/dna/CHECKSUMS
+      - grep "dna.toplevel" CHECKSUMS > checksum.ensembl
+      - gunzip -c Drosophila_melanogaster.BDGP6.dna.toplevel.fa.gz > Drosophila_melanogaster.BDGP6.dna.toplevel.fa
+      - sum Drosophila_melanogaster.BDGP6.dna.toplevel.fa.gz
+      - md5 Drosophila_melanogaster.BDGP6.dna.toplevel.fa.gz > checksum.md5
+      - md5 Drosophila_melanogaster.BDGP6.dna.toplevel.fa >> checksum.md5
+      - mkdir Drosophila_melanogaster.BDGP6.rel91
+      - ln -s Drosophila_melanogaster.BDGP6.dna.toplevel.fa Drosophila_melanogaster.BDGP6.rel91/Drosophila_melanogaster.BDGP6.dna.toplevel.fa
+      - bwa index Drosophila_melanogaster.BDGP6.rel91/Drosophila_melanogaster.BDGP6.dna.toplevel.fa

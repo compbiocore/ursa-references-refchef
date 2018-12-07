@@ -68,3 +68,38 @@ grcm38_p5:
         quasi -k 25
       - salmon index -t Mus_musculus.GRCm38.cdna.all.salmon.fa -i salmon_index_test/Mus_musculus.GRCm38.cdna.all_transcripts_index  --type
         quasi -k 31
+wbps8:
+  metadata:
+    name: wbps8_ws256
+    species: c.elegans
+    organization: wormbase_parasite
+    downloader: fgelin
+  levels:
+    references:
+    - component: primary
+      retrieve: true
+      commands:
+      - wget ftp://ftp.ebi.ac.uk/pub/databases/wormbase/parasite/releases/WBPS8/species/caenorhabditis_elegans/PRJNA13758/caenorhabditis_elegans.PRJNA13758.WBPS8.genomic.fa.gz
+      - gunzip -c caenorhabditis_elegans.PRJNA13758.WBPS8.genomic.fa.gz > caenorhabditis_elegans.PRJNA13758.WBPS8.genomic.fa
+      - wget ftp://ftp.ebi.ac.uk/pub/databases/wormbase/parasite/releases/WBPS8/species/caenorhabditis_elegans/PRJNA13758/caenorhabditis_elegans.PRJNA13758.WBPS8.canonical_geneset.gtf.gz
+      - gunzip -c caenorhabditis_elegans.PRJNA13758.WBPS8.canonical_geneset.gtf.gz
+        > caenorhabditis_elegans.PRJNA13758.WBPS8.canonical_geneset.gtf
+    - component: cdna-trandscriptome
+      retrieve: true
+      commands:
+      - wget ftp://ftp.ebi.ac.uk/pub/databases/wormbase/parasite/releases/WBPS8/species/caenorhabditis_elegans/PRJNA13758/caenorhabditis_elegans.PRJNA13758.WBPS8.mRNA_transcripts.fa.gz
+      - gunzip -c caenorhabditis_elegans.PRJNA13758.WBPS8.mRNA_transcripts.fa.gz >
+        caenorhabditis_elegans.PRJNA13758.WBPS8.mRNA_transcripts.fa
+      - cat caenorhabditis_elegans.PRJNA13758.WBPS8.mRNA_transcripts.fa | awk '{if($1
+        ~ ">" ) {split($1,a,".");$1=a[1]}; print }' > caenorhabditis_elegans.PRJNA13758.WBPS8.mRNA_transcripts.salmon.fa
+      - cat caenorhabditis_elegans.PRJNA13758.WBPS8.mRNA_transcripts.fa | awk '{if($1
+        ~ ">" ) {split($1,a,".");$1=a[1]; split($2,b,"."); $2=b[1];} print }' > caenorhabditis_elegans.PRJNA13758.WBPS8.mRNA_transcripts.salmon2.fa
+      - cat caenorhabditis_elegans.PRJNA13758.WBPS8.mRNA_transcripts.fa | awk '{if($1
+        ~ ">" ) {split($2,b,"."); $2=b[1];} print }' > caenorhabditis_elegans.PRJNA13758.WBPS8.mRNA_transcripts.salmon3.fa
+      - mkdir salmon_index_test
+      - salmon index -t caenorhabditis_elegans.PRJNA13758.WBPS8.mRNA_transcripts.fa
+        -i salmon_index_test/c_elegans_PRJNA13758_WBPS8_mRNA_orig_index  --type quasi
+        -k 25
+      - salmon index -t caenorhabditis_elegans.PRJNA13758.WBPS8.mRNA_transcripts.salmon2.fa
+        -i salmon_index_test/c_elegans_PRJNA13758_WBPS8_mRNA_transcripts_index  --type
+        quasi -k 25

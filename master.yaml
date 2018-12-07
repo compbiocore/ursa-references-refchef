@@ -44,3 +44,27 @@ grcm38_p5:
       - gunzip -c Mus_musculus.GRCm38.dna.primary_assembly.fa.gz > Mus_musculus.GRCm38.dna.primary_assembly.fa
       - wget ftp://ftp.ensembl.org/pub/release-89/gtf/mus_musculus/Mus_musculus.GRCm38.89.gtf.gz
       - gunzip -c Mus_musculus.GRCm38.89.gtf.gz > Mus_musculus.GRCm38.89.gtf
+    - component: cdna-trandscriptome
+      retrieve: true
+      commands:
+      - wget ftp://ftp.ensembl.org/pub/release-89/fasta/mus_musculus/cdna/Mus_musculus.GRCm38.cdna.all.fa.gz
+      - gunzip -c Mus_musculus.GRCm38.cdna.all.fa.gz > Mus_musculus.GRCm38.cdna.all.fa
+      - cat Mus_musculus.GRCm38.cdna.all.fa | awk '{if($1 ~ ">" ) {split($1,a,".");$1=a[1]};
+        print }' > Mus_musculus.GRCm38.cdna.all.salmon.fa
+      - cat Mus_musculus.GRCm38.cdna.all.fa | awk '{if($1 ~ ">" ) {split($1,a,".");$1=a[1];
+        split($4,b,"."); $4=b[1];} print }' > Mus_musculus.GRCm38.cdna.all.salmon2.fa
+      - cat Mus_musculus.GRCm38.cdna.all.fa | awk '{if($1 ~ ">" ) {split($4,b,".");
+        $4=b[1];} print }' > Mus_musculus.GRCm38.cdna.all.salmon3.fa
+      - mkdir salmon_index_test
+      - salmon index -t Mus_musculus.GRCm38.cdna.all.fa -i salmon_index_test/Mus_musculus.GRCm38.cdna.all_orig_index  --type
+        quasi -k 25
+      - salmon index -t Mus_musculus.GRCm38.cdna.all.salmon.fa -i salmon_index_test/Mus_musculus.GRCm38.cdna.all_transcripts_index  --type
+        quasi -k 31
+      - salmon index -t Mus_musculus.GRCm38.cdna.all.salmon.fa -i salmon_index_test/Mus_musculus.GRCm38.cdna.all_transcripts_fmd_index  --type
+        fmd
+      - salmon index -t Mus_musculus.GRCm38.cdna.all.salmon2.fa -i salmon_index_test/Mus_musculus.GRCm38.cdna.all_transcripts_sal_index  --type
+        quasi -k 25
+      - salmon index -t Mus_musculus.GRCm38.cdna.all.salmon3.fa -i salmon_index_test/Mus_musculus.GRCm38.cdna.all_transcripts_sal3_index  --type
+        quasi -k 25
+      - salmon index -t Mus_musculus.GRCm38.cdna.all.salmon.fa -i salmon_index_test/Mus_musculus.GRCm38.cdna.all_transcripts_index  --type
+        quasi -k 31

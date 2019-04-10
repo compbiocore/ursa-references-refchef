@@ -7,13 +7,21 @@ broad_bundle_hg19:
   levels:
     references:
     - component: primary
-      retrieve: true
+      complete:
+        status: true
+        time: 2019-04-10 16:59:30.548935
       commands:
       - wget --user='gsapubftp-anonymous' 'ftp://ftp.broadinstitute.org/bundle/hg19/*'
       - ls -a1 .*.done | xargs rm
       - md5sum *.gz > postdownload-checksums.md5
       - gunzip *.gz
-      - md5sum * > final-checksums.md5
+      - md5sum *.* > final_checksums.md5
+      location: /mnt/data_new/broad_bundle_hg19/primary
+      files:
+      - postdownload-checksums.md5
+      - metadata.txt
+      - final_checksums.md5
+      uuid: 482c6e70-389e-3559-8c19-d86cac067060
 grch37:
   metadata:
     name: grch37_release87
@@ -23,29 +31,53 @@ grch37:
   levels:
     references:
     - component: primary
-      retrieve: true
+      complete:
+        status: true
+        time: 2019-04-10 17:41:32.726820
       commands:
       - rsync -avzP rsync://ftp.ensembl.org/ensembl/pub/grch37/release-87/fasta/homo_sapiens/dna/Homo_sapiens.GRCh37.dna.primary_assembly.fa.gz
         .
       - rsync -avzP rsync://ftp.ensembl.org/ensembl/pub/grch37/release-87/gtf/homo_sapiens/Homo_sapiens.GRCh37.87.gtf.gz
         .
-grcm38_p5:
+      - md5sum *.* > final_checksums.md5
+      location: /mnt/data_new/grch37/primary
+      files:
+      - metadata.txt
+      - Homo_sapiens.GRCh37.dna.primary_assembly.fa.gz
+      - final_checksums.md5
+      - Homo_sapiens.GRCh37.87.gtf.gz
+      uuid: 0ab28308-a055-353d-8368-d937e1f03cd6
+grcm38.p5:
   metadata:
-    name: grcm38_p5
+    name: grcm38.p5
     species: mouse
     organization: ensembl
-    downloader: fgelin
+    downloader: aleith
   levels:
     references:
     - component: primary
-      retrieve: true
+      complete:
+        status: true
+        time: 2019-04-10 17:47:05.428856
       commands:
       - wget ftp://ftp.ensembl.org/pub/release-89/fasta/mus_musculus/dna/Mus_musculus.GRCm38.dna.primary_assembly.fa.gz
       - gunzip -c Mus_musculus.GRCm38.dna.primary_assembly.fa.gz > Mus_musculus.GRCm38.dna.primary_assembly.fa
       - wget ftp://ftp.ensembl.org/pub/release-89/gtf/mus_musculus/Mus_musculus.GRCm38.89.gtf.gz
       - gunzip -c Mus_musculus.GRCm38.89.gtf.gz > Mus_musculus.GRCm38.89.gtf
+      - md5sum *.* > final_checksums.md5
+      location: /mnt/data_new/grcm38.p5/primary
+      files:
+      - Mus_musculus.GRCm38.89.gtf.gz
+      - Mus_musculus.GRCm38.dna.primary_assembly.fa
+      - metadata.txt
+      - Mus_musculus.GRCm38.89.gtf
+      - final_checksums.md5
+      - Mus_musculus.GRCm38.dna.primary_assembly.fa.gz
+      uuid: be834f53-5d2c-3e0c-a98b-1f1c37e118d1
     - component: cdna-trandscriptome
-      retrieve: true
+      complete:
+        status: true
+        time: 2019-04-10 18:08:53.270435
       commands:
       - wget ftp://ftp.ensembl.org/pub/release-89/fasta/mus_musculus/cdna/Mus_musculus.GRCm38.cdna.all.fa.gz
       - gunzip -c Mus_musculus.GRCm38.cdna.all.fa.gz > Mus_musculus.GRCm38.cdna.all.fa
@@ -55,19 +87,64 @@ grcm38_p5:
         split($4,b,"."); $4=b[1];} print }' > Mus_musculus.GRCm38.cdna.all.salmon2.fa
       - cat Mus_musculus.GRCm38.cdna.all.fa | awk '{if($1 ~ ">" ) {split($4,b,".");
         $4=b[1];} print }' > Mus_musculus.GRCm38.cdna.all.salmon3.fa
-      - mkdir salmon_index_test
-      - salmon index -t Mus_musculus.GRCm38.cdna.all.fa -i salmon_index_test/Mus_musculus.GRCm38.cdna.all_orig_index  --type
+      - mkdir salmon_index
+      - salmon index -t Mus_musculus.GRCm38.cdna.all.fa -i salmon_index/Mus_musculus.GRCm38.cdna.all_orig_index  --type
         quasi -k 25
-      - salmon index -t Mus_musculus.GRCm38.cdna.all.salmon.fa -i salmon_index_test/Mus_musculus.GRCm38.cdna.all_transcripts_index  --type
+      - salmon index -t Mus_musculus.GRCm38.cdna.all.salmon.fa -i salmon_index/Mus_musculus.GRCm38.cdna.all_transcripts_index  --type
         quasi -k 31
-      - salmon index -t Mus_musculus.GRCm38.cdna.all.salmon.fa -i salmon_index_test/Mus_musculus.GRCm38.cdna.all_transcripts_fmd_index  --type
+      - salmon index -t Mus_musculus.GRCm38.cdna.all.salmon.fa -i salmon_index/Mus_musculus.GRCm38.cdna.all_transcripts_fmd_index  --type
         fmd
-      - salmon index -t Mus_musculus.GRCm38.cdna.all.salmon2.fa -i salmon_index_test/Mus_musculus.GRCm38.cdna.all_transcripts_sal_index  --type
+      - salmon index -t Mus_musculus.GRCm38.cdna.all.salmon2.fa -i salmon_index/Mus_musculus.GRCm38.cdna.all_transcripts_sal_index  --type
         quasi -k 25
-      - salmon index -t Mus_musculus.GRCm38.cdna.all.salmon3.fa -i salmon_index_test/Mus_musculus.GRCm38.cdna.all_transcripts_sal3_index  --type
+      - salmon index -t Mus_musculus.GRCm38.cdna.all.salmon3.fa -i salmon_index/Mus_musculus.GRCm38.cdna.all_transcripts_sal3_index  --type
         quasi -k 25
-      - salmon index -t Mus_musculus.GRCm38.cdna.all.salmon.fa -i salmon_index_test/Mus_musculus.GRCm38.cdna.all_transcripts_index  --type
+      - salmon index -t Mus_musculus.GRCm38.cdna.all.salmon.fa -i salmon_index/Mus_musculus.GRCm38.cdna.all_transcripts_index  --type
         quasi -k 31
+      - md5sum *.* > final_checksums.md5
+      location: /mnt/data_new/grcm38.p5/cdna-trandscriptome
+      files:
+      - salmon_index
+      - Mus_musculus.GRCm38.cdna.all.salmon3.fa
+      - metadata.txt
+      - Mus_musculus.GRCm38.cdna.all.fa.gz
+      - final_checksums.md5
+      - Mus_musculus.GRCm38.cdna.all.salmon.fa
+      - Mus_musculus.GRCm38.cdna.all.salmon2.fa
+      - Mus_musculus.GRCm38.cdna.all.fa
+      uuid: 54a37969-f245-3a78-aec3-d2c6034bbd27
+drosophila-melanogaster.bdgp6rel9:
+  metadata:
+    name: drosophila-melanogaster.bdgp6rel9
+    species: drosophila
+    organization: ensembl
+    downloader: fgelin
+  levels:
+    references:
+    - component: primary
+      complete:
+        status: true
+        time: 2019-04-10 18:09:33.140146
+      commands:
+      - wget ftp://ftp.ensembl.org/pub/release-91/fasta/drosophila_melanogaster/dna/Drosophila_melanogaster.BDGP6.dna.toplevel.fa.gz
+      - wget ftp://ftp.ensembl.org/pub/release-91/fasta/drosophila_melanogaster/dna/CHECKSUMS
+      - grep "dna.toplevel" CHECKSUMS > checksum.ensembl
+      - gunzip -c Drosophila_melanogaster.BDGP6.dna.toplevel.fa.gz > Drosophila_melanogaster.BDGP6.dna.toplevel.fa
+      - sum Drosophila_melanogaster.BDGP6.dna.toplevel.fa.gz
+      - md5sum Drosophila_melanogaster.BDGP6.dna.toplevel.fa.gz > checksum.md5
+      - md5sum Drosophila_melanogaster.BDGP6.dna.toplevel.fa >> checksum.md5
+      - mkdir Drosophila_melanogaster.BDGP6.rel91
+      - md5sum *.* > final_checksums.md5
+      location: /mnt/data_new/drosophila-melanogaster.bdgp6rel9/primary
+      files:
+      - Drosophila_melanogaster.BDGP6.rel91
+      - checksum.ensembl
+      - Drosophila_melanogaster.BDGP6.dna.toplevel.fa
+      - checksum.md5
+      - metadata.txt
+      - final_checksums.md5
+      - Drosophila_melanogaster.BDGP6.dna.toplevel.fa.gz
+      - CHECKSUMS
+      uuid: 6206259e-fe61-35a2-9773-6a491c17aa11
 wbps8:
   metadata:
     name: wbps8_ws256
@@ -77,15 +154,29 @@ wbps8:
   levels:
     references:
     - component: primary
-      retrieve: true
+      complete:
+        status: true
+        time: 2019-04-10 18:09:58.897279
       commands:
       - wget ftp://ftp.ebi.ac.uk/pub/databases/wormbase/parasite/releases/WBPS8/species/caenorhabditis_elegans/PRJNA13758/caenorhabditis_elegans.PRJNA13758.WBPS8.genomic.fa.gz
       - gunzip -c caenorhabditis_elegans.PRJNA13758.WBPS8.genomic.fa.gz > caenorhabditis_elegans.PRJNA13758.WBPS8.genomic.fa
       - wget ftp://ftp.ebi.ac.uk/pub/databases/wormbase/parasite/releases/WBPS8/species/caenorhabditis_elegans/PRJNA13758/caenorhabditis_elegans.PRJNA13758.WBPS8.canonical_geneset.gtf.gz
       - gunzip -c caenorhabditis_elegans.PRJNA13758.WBPS8.canonical_geneset.gtf.gz
         > caenorhabditis_elegans.PRJNA13758.WBPS8.canonical_geneset.gtf
+      - md5sum *.* > final_checksums.md5
+      location: /mnt/data_new/wbps8/primary
+      files:
+      - caenorhabditis_elegans.PRJNA13758.WBPS8.genomic.fa.gz
+      - metadata.txt
+      - caenorhabditis_elegans.PRJNA13758.WBPS8.canonical_geneset.gtf
+      - final_checksums.md5
+      - caenorhabditis_elegans.PRJNA13758.WBPS8.genomic.fa
+      - caenorhabditis_elegans.PRJNA13758.WBPS8.canonical_geneset.gtf.gz
+      uuid: 0e1f369b-e08b-3108-be7e-da6210f82ca7
     - component: cdna-trandscriptome
-      retrieve: true
+      complete:
+        status: true
+        time: 2019-04-10 18:11:46.831859
       commands:
       - wget ftp://ftp.ebi.ac.uk/pub/databases/wormbase/parasite/releases/WBPS8/species/caenorhabditis_elegans/PRJNA13758/caenorhabditis_elegans.PRJNA13758.WBPS8.mRNA_transcripts.fa.gz
       - gunzip -c caenorhabditis_elegans.PRJNA13758.WBPS8.mRNA_transcripts.fa.gz >
@@ -96,31 +187,22 @@ wbps8:
         ~ ">" ) {split($1,a,".");$1=a[1]; split($2,b,"."); $2=b[1];} print }' > caenorhabditis_elegans.PRJNA13758.WBPS8.mRNA_transcripts.salmon2.fa
       - cat caenorhabditis_elegans.PRJNA13758.WBPS8.mRNA_transcripts.fa | awk '{if($1
         ~ ">" ) {split($2,b,"."); $2=b[1];} print }' > caenorhabditis_elegans.PRJNA13758.WBPS8.mRNA_transcripts.salmon3.fa
-      - mkdir salmon_index_test
+      - mkdir salmon_index
       - salmon index -t caenorhabditis_elegans.PRJNA13758.WBPS8.mRNA_transcripts.fa
-        -i salmon_index_test/c_elegans_PRJNA13758_WBPS8_mRNA_orig_index  --type quasi
-        -k 25
+        -i salmon_index/c_elegans_PRJNA13758_WBPS8_mRNA_orig_index  --type quasi -k
+        25
       - salmon index -t caenorhabditis_elegans.PRJNA13758.WBPS8.mRNA_transcripts.salmon2.fa
-        -i salmon_index_test/c_elegans_PRJNA13758_WBPS8_mRNA_transcripts_index  --type
+        -i salmon_index/c_elegans_PRJNA13758_WBPS8_mRNA_transcripts_index  --type
         quasi -k 25
-drosophila-melanogaster_bdgp6rel9:
-  metadata:
-    name: drosophila-melanogaster_bdgp6rel9
-    species: drosophila
-    organization: ensembl
-    downloader: fgelin
-  levels:
-    references:
-    - component: primary
-      retrieve: true
-      commands:
-      - wget ftp://ftp.ensembl.org/pub/release-91/fasta/drosophila_melanogaster/dna/Drosophila_melanogaster.BDGP6.dna.toplevel.fa.gz
-      - wget ftp://ftp.ensembl.org/pub/release-91/fasta/drosophila_melanogaster/dna/CHECKSUMS
-      - grep "dna.toplevel" CHECKSUMS > checksum.ensembl
-      - gunzip -c Drosophila_melanogaster.BDGP6.dna.toplevel.fa.gz > Drosophila_melanogaster.BDGP6.dna.toplevel.fa
-      - sum Drosophila_melanogaster.BDGP6.dna.toplevel.fa.gz
-      - md5 Drosophila_melanogaster.BDGP6.dna.toplevel.fa.gz > checksum.md5
-      - md5 Drosophila_melanogaster.BDGP6.dna.toplevel.fa >> checksum.md5
-      - mkdir Drosophila_melanogaster.BDGP6.rel91
-      - ln -s Drosophila_melanogaster.BDGP6.dna.toplevel.fa Drosophila_melanogaster.BDGP6.rel91/Drosophila_melanogaster.BDGP6.dna.toplevel.fa
-      - bwa index Drosophila_melanogaster.BDGP6.rel91/Drosophila_melanogaster.BDGP6.dna.toplevel.fa
+      - md5sum *.* > final_checksums.md5
+      location: /mnt/data_new/wbps8/cdna-trandscriptome
+      files:
+      - salmon_index
+      - caenorhabditis_elegans.PRJNA13758.WBPS8.mRNA_transcripts.salmon3.fa
+      - metadata.txt
+      - caenorhabditis_elegans.PRJNA13758.WBPS8.mRNA_transcripts.salmon2.fa
+      - caenorhabditis_elegans.PRJNA13758.WBPS8.mRNA_transcripts.salmon.fa
+      - final_checksums.md5
+      - caenorhabditis_elegans.PRJNA13758.WBPS8.mRNA_transcripts.fa.gz
+      - caenorhabditis_elegans.PRJNA13758.WBPS8.mRNA_transcripts.fa
+      uuid: b54b3aa0-26ab-3220-a10a-436960cf6f23

@@ -274,10 +274,10 @@ spur31:
       complete:
         status: false
       commands:
-      - rsync -avzP rsync://ftp.ensemblgenomes.org/ensembl/pub/release-43/metazoa/fasta/strongylocentrotus_purpuratus/dna/Strongylocentrotus_purpuratus.Spur_3.1.dna.toplevel.fa.gz
-      - rsync -avzP rsync://ftp.ensemblgenomes.org/ensembl/pub/release-43/metazoa/fasta/strongylocentrotus_purpuratus/dna/CHECKSUMS
-      - rsync -avzP rsync://ftp.ensemblgenomes.org/ensembl/pub/release-43/metazoa/gtf/strongylocentrotus_purpuratus/Strongylocentrotus_purpuratus.Spur_3.1.43.gtf.gz
-      - rsync -avzP rsync://ftp.ensemblgenomes.org/ensembl/pub/release-43/metazoa/gtf/strongylocentrotus_purpuratus/CHECKSUMS
+      - wget ftp://ftp.ensemblgenomes.org/pub/metazoa/release-43/fasta/strongylocentrotus_purpuratus/dna/CHECKSUMS
+      - wget ftp://ftp.ensemblgenomes.org/pub/metazoa/release-43/fasta/strongylocentrotus_purpuratus/dna/Strongylocentrotus_purpuratus.Spur_3.1.43.dna.toplevel.fa.gz
+      - wget ftp://ftp.ensemblgenomes.org/pub/metazoa/release-43/gff3/strongylocentrotus_purpuratus/Strongylocentrotus_purpuratus.Spur_3.1.43.gff3.gz
+      - wget ftp://ftp.ensemblgenomes.org/pub/metazoa/release-43/gff3/strongylocentrotus_purpuratus/CHECKSUMS
       - md5sum * > final_checksums.md5
   metadata:
     downloader: jwalla12

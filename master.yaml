@@ -206,3 +206,20 @@ wbps8:
       - caenorhabditis_elegans.PRJNA13758.WBPS8.mRNA_transcripts.fa.gz
       - caenorhabditis_elegans.PRJNA13758.WBPS8.mRNA_transcripts.fa
       uuid: b54b3aa0-26ab-3220-a10a-436960cf6f23
+spur31:
+  levels:
+    references:
+    - component: primary
+      complete:
+        status: false
+      commands:
+      - rsync -avzP rsync://ftp.ensemblgenomes.org/ensembl/pub/release-43/metazoa/fasta/strongylocentrotus_purpuratus/dna/Strongylocentrotus_purpuratus.Spur_3.1.dna.toplevel.fa.gz
+      - rsync -avzP rsync://ftp.ensemblgenomes.org/ensembl/pub/release-43/metazoa/fasta/strongylocentrotus_purpuratus/dna/CHECKSUMS
+      - rsync -avzP rsync://ftp.ensemblgenomes.org/ensembl/pub/release-43/metazoa/gtf/strongylocentrotus_purpuratus/Strongylocentrotus_purpuratus.Spur_3.1.43.gtf.gz
+      - rsync -avzP rsync://ftp.ensemblgenomes.org/ensembl/pub/release-43/metazoa/gtf/strongylocentrotus_purpuratus/CHECKSUMS
+      - md5sum * > final_checksums.md5
+  metadata:
+    downloader: jwalla12
+    name: spur31
+    organization: Ensembl
+    species: Strongylocentrotus purpuratus
